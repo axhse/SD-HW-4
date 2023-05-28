@@ -1,0 +1,405 @@
+{
+	"info": {
+		"_postman_id": "d8289656-8b82-41cb-84be-8fb908d5e084",
+		"name": "CafeAPI",
+		"description": "Запросы к микросервисам UserManager и Cafe\n\nДля успешной аутентификации требуется указывать jwt-токен в заголовке **\"Authorization\"** в формате **\"Bearer** _**TOKEN_VALUE**_**\"**\n\nДля удобства можно использовать Postman-авторизацию (определена в **Authorization** коллекции). В этом случае jwt-токен определяется в переменной коллекции **\"BEARER_TOKEN\"**\n\nВсе запросы подробно описаны в документации коллекции c учетом их полной спецификации",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "27659869"
+	},
+	"item": [
+		{
+			"name": "UserManager",
+			"item": [
+				{
+					"name": "Get Current User Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{USER_MANAGER_DOMAIN}}/user/current",
+						"description": "**Получить информацию о пользователе по текущей сессии (jwt-токену)**\n\n**200** — успешный запрос\n\n**403** — пользователь не аутентифицирован"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Data",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{USER_MANAGER_DOMAIN}}/user/get?userId=4",
+							"host": [
+								"{{USER_MANAGER_DOMAIN}}"
+							],
+							"path": [
+								"user",
+								"get"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "4"
+								}
+							]
+						},
+						"description": "**Получить информацию о пользователе по его id**\n\n**userId** — обязательный url-параметр\n\n**200** — успешный запрос\n\n**404** — пользователь не найден"
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{USER_MANAGER_DOMAIN}}/user/create?email=php@innovations.com&password=PHP&username=php&role=manager",
+							"host": [
+								"{{USER_MANAGER_DOMAIN}}"
+							],
+							"path": [
+								"user",
+								"create"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "php@innovations.com"
+								},
+								{
+									"key": "password",
+									"value": "PHP"
+								},
+								{
+									"key": "username",
+									"value": "php"
+								},
+								{
+									"key": "role",
+									"value": "manager"
+								}
+							]
+						},
+						"description": "**Создать пользователя**\n\n**email, password, username, role** — обязательные url-параметры\n\n**201** — пользователь создан\n\n**400** — получены некорректные данные/username или email уже используются\n\nОтветное сообщение возвращается в теле в поле **\"message\"**"
+					},
+					"response": []
+				},
+				{
+					"name": "Log In",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{USER_MANAGER_DOMAIN}}/user/login?email=php@innovations.com&password=PHP",
+							"host": [
+								"{{USER_MANAGER_DOMAIN}}"
+							],
+							"path": [
+								"user",
+								"login"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "php@innovations.com"
+								},
+								{
+									"key": "password",
+									"value": "PHP"
+								}
+							]
+						},
+						"description": "**Аутентифицироваться**\n\n**email, password** — обязательные url-параметры\n\n**200** — пользователь аутентифицирован\n\n**400** — недопустимый формат email или password\n\n**403** — неправильный пароль\n\n**404** — не найден пользователь с таким email\n\nОтветное сообщение возвращается в теле в поле **\"message\"**\n\nУспешный ответ содержит заголовок аутентификации (можно его скопировать в запросы). Также в поле **\"bearerToken\"** содержится jwt-токен (можно скопировать его в переменную среды)"
+					},
+					"response": []
+				}
+			],
+			"description": "Микросервис для работы с аккаунтами, SSO"
+		},
+		{
+			"name": "Cafe",
+			"item": [
+				{
+					"name": "Get Menu",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{CAFE_DOMAIN}}/cafe/menu",
+						"description": "**Получить информацию о меню**\n\nИнформация о достпуных блюдах показывается списком в поле тела ответа **\"dishes\"**\n\n**200** — успешный запрос\n\n**403** — пользователь не аутентифицирован"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Dish Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CAFE_DOMAIN}}/cafe/dish/get?dishId=1",
+							"host": [
+								"{{CAFE_DOMAIN}}"
+							],
+							"path": [
+								"cafe",
+								"dish",
+								"get"
+							],
+							"query": [
+								{
+									"key": "dishId",
+									"value": "1"
+								}
+							]
+						},
+						"description": "**Получить информацию о блюде**\n\n**dishId** — обязательный url-параметр\n\n**200** — успешный запрос\n\n**403** — пользователь не аутентифицирован или не менеджер\n\n**404** — блюдо не найдено"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CAFE_DOMAIN}}/cafe/order/get?orderId=1",
+							"host": [
+								"{{CAFE_DOMAIN}}"
+							],
+							"path": [
+								"cafe",
+								"order",
+								"get"
+							],
+							"query": [
+								{
+									"key": "orderId",
+									"value": "1"
+								}
+							]
+						},
+						"description": "**Получить информацию о заказе**\n\n**orderId** — обязательный url-параметр\n\n**200** — успешный запрос\n\n**403** — пользователь не аутентифицирован или пытается посмотреть не свой заказ\n\n**404** — заказ не найден"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Dish",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{CAFE_DOMAIN}}/cafe/dish/create?name=blini with blueberry jam&description=Made in US&price=2.15&quantity=100&isAvailable=true",
+							"host": [
+								"{{CAFE_DOMAIN}}"
+							],
+							"path": [
+								"cafe",
+								"dish",
+								"create"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "blini with blueberry jam"
+								},
+								{
+									"key": "description",
+									"value": "Made in US"
+								},
+								{
+									"key": "price",
+									"value": "2.15"
+								},
+								{
+									"key": "quantity",
+									"value": "100"
+								},
+								{
+									"key": "isAvailable",
+									"value": "true"
+								}
+							]
+						},
+						"description": "**Создать блюдо**\n\n**name, price, quantity, isAvailable** — обязательные url-параметры\n\n**description** — опициональный url-параметр\n\n**201** — блюдо создано\n\n**400** — получены некорректные данные\n\n**403** — пользователь не аутентифицирован или не менеджер\n\nОтветное сообщение возвращается в теле в поле **\"message\"**\n\nУспешный ответ также содержит начение **id** созданного блюда в теле в поле **\"dishId\"**"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Dish",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{CAFE_DOMAIN}}/cafe/dish/update?id=1&name=blini with blueberry jam 2.0&description=Made in Canada&price=2.4&quantity=10&isAvailable=true",
+							"host": [
+								"{{CAFE_DOMAIN}}"
+							],
+							"path": [
+								"cafe",
+								"dish",
+								"update"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								},
+								{
+									"key": "name",
+									"value": "blini with blueberry jam 2.0"
+								},
+								{
+									"key": "description",
+									"value": "Made in Canada"
+								},
+								{
+									"key": "price",
+									"value": "2.4"
+								},
+								{
+									"key": "quantity",
+									"value": "10"
+								},
+								{
+									"key": "isAvailable",
+									"value": "true"
+								}
+							]
+						},
+						"description": "**Обновить блюдо**\n\n**id, name, price, quantity, isAvailable** — обязательные url-параметры\n\n**description** — опициональный url-параметр\n\n**200** — блюдо обновлено\n\n**400** — получены некорректные данные\n\n**403** — пользователь не аутентифицирован или не менеджер\n\n**404** — блюдо не найдено\n\nОтветное сообщение возвращается в теле в поле **\"message\"**"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Dish",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{CAFE_DOMAIN}}/cafe/dish/delete?dishId=1",
+							"host": [
+								"{{CAFE_DOMAIN}}"
+							],
+							"path": [
+								"cafe",
+								"dish",
+								"delete"
+							],
+							"query": [
+								{
+									"key": "dishId",
+									"value": "1"
+								}
+							]
+						},
+						"description": "**Удалить блюдо**\n\n**dishId** — обязательный url-параметр\n\n**200** — блюдо удалено\n\n**403** — пользователь не аутентифицирован или не менеджер"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"specialRequests\": \"As fast as possible\",\r\n    \"dishes\": [\r\n        {\r\n            \"id\": 1,\r\n            \"quantity\": 44\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{CAFE_DOMAIN}}/cafe/order/create",
+						"description": "**Создать заказ**\n\n**specialRequests** — опциональный body-параметр\n\n**dishes** — обязательный body-параметр, должен быть представлен в виде списка структур\n\n**id, quantity** — обязательные параметры в каждой такой структуре\n\n**201** — заказ создан\n\n**400** — получены некорректные данные\n\n**403** — пользователь не аутентифицирован\n\nОтветное сообщение возвращается в теле в поле **\"message\"**\n\nУспешный ответ также содержит начение **id** созданного заказа в теле в поле **\"orderId\"**"
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{CAFE_DOMAIN}}/cafe/order/cancel?orderId=1",
+							"host": [
+								"{{CAFE_DOMAIN}}"
+							],
+							"path": [
+								"cafe",
+								"order",
+								"cancel"
+							],
+							"query": [
+								{
+									"key": "orderId",
+									"value": "1"
+								}
+							]
+						},
+						"description": "**Отменить заказ**\n\n**orderId** — обязательный url-параметр\n\n**200** — закан отменен\n\n**403** — пользователь не аутентифицирован или пытается отменить не свой заказ"
+					},
+					"response": []
+				}
+			],
+			"description": "Микросервис, выполняющий требуемые функции кафе"
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": {
+			"token": "{{BEARER_TOKEN}}"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BEARER_TOKEN",
+			"value": "aaa.bbb.ccc",
+			"type": "default"
+		},
+		{
+			"key": "USER_MANAGER_DOMAIN",
+			"value": "http://localhost:8901",
+			"type": "default"
+		},
+		{
+			"key": "CAFE_DOMAIN",
+			"value": "http://localhost:8902",
+			"type": "default"
+		}
+	]
+}
